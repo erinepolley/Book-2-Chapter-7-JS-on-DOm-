@@ -74,34 +74,37 @@ const students = [
         score: 95
     }
 ]
-
-let studentGrade
-const createStudentComponent = (name, subject, info, score) => {
-    if ( score >= 60) {
-        studentGrade = "passing"
-    } else {
-        studentGrade = "failing"
-    }
+//studentGrace is a class. Whatever is passed into that interpolation is linked to CSS and will change the color depending.
+let studentGrade 
+const createStudentComponent = (studentArray) => {
     return `
         <div class="student">
-            <h1 class="xx-large ${studentGrade}">${name}</h1>
-            <section class="bordered dashed section--padded">${subject}</section>
-            <aside class="pushRight">${info}</aside>
+            <h1 class="xx-large ${studentGrade}">${studentArray.name}</h1>
+            <section class="bordered dashed section--padded">${studentArray.subject}</section>
+            <aside class="pushRight">${studentArray.info}</aside>
         </div>
     `
 }
 
-
+//The assignment was to pass one argument in the above function, instead of four different arguments. I originally had two forEach loops, but I consolidated by moving one down here. That way, I can iterate over the objects and determine if the students are passing or failing, but also pass the objects into the above function.
+let studentComponentInnerHtml = ""
+const renderStudentsToDom = (items) => {
+    items.forEach(student => {
+        if (student.score >= 60) {
+            studentGrade = "passing"
+        } else {
+            studentGrade = "failing"
+        }
+        studentComponentInnerHtml += createStudentComponent(student)
+    })
+//originally tried to do a regular loop down here, but didn't work. Commented out some code that didn't work.
 const studentContainer = document.querySelector(".container")
-for (let i = 0; i < students.length; i++) {
-    const student = students[i]
-    studentContainer.innerHTML += createStudentComponent(
-        student.name,
-        student.subject,
-        student.info,
-        student.score
-    )
-};
+// for (let i = 0; i < students.length; i++) {
+    // const student = students[0]
+    studentContainer.innerHTML = studentComponentInnerHtml
+}
+//Phew!
+renderStudentsToDom(students)
 
 // let studentComponent = ""
 // for (const student of students) {
